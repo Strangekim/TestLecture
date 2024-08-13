@@ -1,5 +1,23 @@
 {
   "dependencies": {
+    "express": "^4.19.2",
     "package.json": "^2.0.1"
-  }
+  },
+  "name": "testlecture",
+  "description": "",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Strangekim/TestLecture.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Strangekim/TestLecture/issues"
+  },
+  "homepage": "https://github.com/Strangekim/TestLecture#readme"
 }
