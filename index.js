@@ -35,7 +35,8 @@ const regCategoryName = /^[가-힣]{1,8}$/;
 app.get("/log-in", (req,res) => {
     const userId = req.body.userId
     const userPw = req.body.userPw
-
+    
+    // const [userId,userPW] = req.body;
 
     if(!regId.test(userId)){
         res.send({
