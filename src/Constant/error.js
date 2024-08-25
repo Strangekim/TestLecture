@@ -1,3 +1,12 @@
+// 200 , 성공
+function successFunc (res, message){
+    res.status(200).send({
+        "success" : true,
+        "messege" : message        
+    })
+}
+
+
 // 400 에러
 class inputError extends Error {
     constructor(message) {
@@ -50,7 +59,7 @@ function cantAcessErrorFunc (dbinput, message) {
 class notFoundError extends Error {
     constructor(message) {
         super(message)
-        this.message = `${message}가 존재하지 않습니다.`
+        this.message = `존재하지 않는 ${message} 입니다.`
         this.status = 404
     }
 }
@@ -78,4 +87,13 @@ function conflictErrorFunc (rows, message) {
     }
 }
 
-module.exports = {notUserIdxErrorFunc, inputErrorFunc, cantAcessErrorFunc, notFoundErrorFunc, conflictErrorFunc}
+// 500 에러 메시지 어떻게 할지
+function errorState(res, e) {
+    res.status(e.status || 500).send({
+    "success" : false,
+    "message" : e.message,
+    "status" : e.status
+}) 
+}
+
+module.exports = {notUserIdxErrorFunc, inputErrorFunc, cantAcessErrorFunc, notFoundErrorFunc, conflictErrorFunc, errorState, successFunc}

@@ -9,7 +9,7 @@ const regArticleCategory = /^[0-9]{1,2}$/;
 const regArticleContent = /^.{1,500}$/;
 const regCommentContent = /^.{1,100}$/;
 const regCreateTime = /^[0-9]$/;
-const regIdx = /^[0-9]$/;
+const regIdx = /^[0-9]{1,}$/;
 const regUserGrade = /^[01]$/;
 const regCategoryName = /^[가-힣]{1,8}$/;
 

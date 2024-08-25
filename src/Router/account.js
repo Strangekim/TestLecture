@@ -1,6 +1,6 @@
 const router = require("express").Router()
 const {regId, regPw, regName, regPhone, regUserGrade, regIdx} = require("../Constant/regx")
-const {notUserIdxErrorFunc, inputErrorFunc, cantAcessErrorFunc, notFoundErrorFunc, conflictErrorFunc} = require("../Constant/error") 
+const {notUserIdxErrorFunc, inputErrorFunc, cantAcessErrorFunc, notFoundErrorFunc, conflictErrorFunc, errorState, successFunc} = require("../Constant/error") 
 
 
 // 로그인
@@ -16,16 +16,9 @@ router.get("/log-in", (req,res) => {
 
         cantAcessErrorFunc(rows, "아이디와 비밀번호가 일치하지 않습니다.")
 
-        res.status(200).send({
-            "success" : true,
-            "messege" : "로그인 성공"
-        })
+        successFunc(res, "로그인 성공")
     } catch(e){
-        res.status(e.status || 500).send({
-            "success" : false,
-            "message" : e.message,
-            "status" : e.status
-        })
+        errorState(res, e)
     }
 })
 
@@ -41,18 +34,10 @@ router.get("/log-out", (req,res) => {
         
         notFoundErrorFunc(rows, "계정정보")
 
-        res.status(200).send({
-            "success" : true,
-            "messege" : "로그아웃 성공"
-        })
-
+        successFunc(res, "로그아웃 성공")
         req.session.destroy(); 
     } catch(e) {
-        res.status(e.status || 500).send({
-            "success" : false,
-            "message" : e.message,
-            "status" : e.status
-        })
+        errorState(res, e)
     }
 })
 
@@ -68,17 +53,9 @@ router.delete("/", (req,res) => {
         
         notFoundErrorFunc(rows, "계정정보")
 
-        res.status(200).send({
-            "success" : true,
-            "messege" : "회원탈퇴"
-        })
-
+        successFunc(res, "회원탈퇴")
     } catch(e) {
-        res.status(e.status || 500).send({
-            "success" : false,
-            "message" : e.message,
-            "status" : e.status
-        })
+        errorState(res, e)
     }
 })  
 
@@ -93,17 +70,9 @@ router.get("/find-id", (req,res) => {
         const rows = []
 
         notFoundErrorFunc(rows, "전화번호")
-
-        res.status(200).send({
-            "success" : true,
-            "messege" : "로그인 성공"
-        })
+        successFunc(res, "아이디 찾기")
     } catch(e){
-        res.status(e.status || 500).send({
-            "success" : false,
-            "message" : e.message,
-            "status" : e.status
-        })
+        errorState(res, e)
     }
 })
 
@@ -121,16 +90,9 @@ router.get("/find-pw", (req,res) => {
         notFoundErrorFunc(rows, "전화번호")
         cantAcessErrorFunc(rows, "이름이 일치하지 않습니다.")
 
-        res.status(200).send({
-            "success" : true,
-            "messege" : "로그인 성공"
-        })
+        successFunc(res, "비밀번호 찾기")       
     } catch(e){
-        res.status(e.status || 500).send({
-            "success" : false,
-            "message" : e.message,
-            "status" : e.status
-        })
+        errorState(res, e)
     }
 })
 
@@ -152,16 +114,9 @@ router.post("/", (req,res) => {
         conflictErrorFunc(rows, "전화번호")
         conflictErrorFunc(rows, "아이디")
 
-        res.status(200).send({
-            "success" : true,
-            "messege" : "로그인 성공"
-        })
+        successFunc(res, "계정 생성 성공")
     } catch(e){
-        res.status(e.status || 500).send({
-            "success" : false,
-            "message" : e.message,
-            "status" : e.status
-        })
+        errorState(res, e)
     }
     
 })
@@ -198,17 +153,9 @@ router.put("/", (req,res) => {
 
         const rows = []
         notFoundErrorFunc(rows, "계정 정보")
-
-        res.status(200).send({
-            "success" : true,
-            "messege" : "회원 정보 수정 성공"
-        })
+        successFunc(res, "회원 정보 수정 성공")
     } catch(e){
-        res.status(e.status || 500).send({
-            "success" : false,
-            "message" : e.message,
-            "status" : e.status
-        })
+        errorState(res, e)
     }
 })
 
