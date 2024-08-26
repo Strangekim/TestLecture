@@ -133,21 +133,9 @@ router.put("/", (req,res) => {
             err.status = 400
             throw err
         }
-        if(!regId.test(userId)){
-            const err = new Error("잘못된 이름입니다.")
-            err.status = 400
-            throw err
-        }
-        if(!regPw.test(userPw)){
-            const err = new Error("잘못된 비밀번호입니다.")
-            err.status = 400
-            throw err
-        }
-        if(!regUserGrade.test(userGrade)){
-            const err = new Error("잘못된 등급입니다.")
-            err.status = 400
-            throw err
-        }
+        if(userId){inputErrorFunc(userId, "아이디", regId)}
+        if(userPw){inputErrorFunc(userPw, "비밀번호", regPw)}
+        if(userGrade){inputErrorFunc(userGrade, "등급", regUserGrade)}
         // 401
         // notUserIdxErrorFunc(userIdx)
 
