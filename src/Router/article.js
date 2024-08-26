@@ -34,11 +34,11 @@ router.post("/", (req, res) => {
         inputErrorFunc(articleCategory, "게시판 종류", regArticleCategory)
         inputErrorFunc(articleTitle, "게시글 제목", regArticleTitle)
         inputErrorFunc(articleContent, "게시글 내용", regArticleContent)
-        // notUserIdxErrorFunc(userIdx)
+        notUserIdxErrorFunc(userIdx)
 
         const rows = []
 
-        // notFoundErrorFunc(rows, "게시판 종류")
+        notFoundErrorFunc(rows, "게시판 종류")
         successFunc(res, "게시글 작성 성공")
         
     } catch (e) {

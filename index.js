@@ -3,6 +3,9 @@ const express = require("express")
 const session = require("express-session")
 const app = express()
 
+const mariadb = require("./src/database/database")
+mariadb.connect();
+
 app.use(express.json()) // Object를 파싱해주는 명령어
 
 app.use(
@@ -17,7 +20,7 @@ app.use(
 }))
 
 const pageRouter = require("./src/Router/page")
-app.use("/", pageRouter)
+app.use("/page", pageRouter)
 
 const accountRouter = require("./src/Router/account")
 app.use("/account", accountRouter)
