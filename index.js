@@ -3,8 +3,8 @@ const express = require("express")
 const session = require("express-session")
 const app = express()
 
-const mariadb = require("./src/database/database")
-mariadb.connect();
+// const mariadb = require("./src/database/database")
+// mariadb.connect();
 
 app.use(express.json()) // Object를 파싱해주는 명령어
 

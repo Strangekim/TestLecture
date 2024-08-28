@@ -1,7 +1,5 @@
 const router = require("express").Router()
 const path = require('path')
-const mariadb = require("../database/database")
-
 const conn = require("../database/database")
 
 router.get("/home", (req, res) => {

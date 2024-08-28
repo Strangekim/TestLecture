@@ -1,15 +1,16 @@
 const router = require("express").Router()
 const {regId, regPw, regName, regPhone, regUserGrade, regIdx} = require("../Constant/regx")
 const {notUserIdxErrorFunc, inputErrorFunc, cantAcessErrorFunc, notFoundErrorFunc, conflictErrorFunc, errorState, successFunc} = require("../Constant/error") 
+const checkinput = require("../middleware/checkInput")
 
 
 // 로그인
-router.get("/log-in", (req,res) => {
+router.get("/log-in", checkinput(regId,"userId"), checkinput(regPw, "userPw"),(req,res) => {
     const {userId, userPw} = req.body;
 
     try {
-        inputErrorFunc(userId, "아이디", regId)
-        inputErrorFunc(userPw, "비밀번호", regPw)
+        // inputErrorFunc(userId, "아이디", regId)
+        // inputErrorFunc(userPw, "비밀번호", regPw)
 
         // DB 연결 후 로그인 실패 시 403
         const rows = []
