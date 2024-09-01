@@ -2,29 +2,26 @@ const router = require("express").Router()
 const {regId, regPw, regName, regPhone, regUserGrade, regArticleCategory, regIdx, regArticleTitle, regArticleContent, regCommentContent, regCategoryName} = require("../Constant/regx")
 const {notUserIdxErrorFunc, inputErrorFunc, cantAcessErrorFunc, notFoundErrorFunc, conflictErrorFunc, errorState, successFunc} = require("../Constant/error")
 
+const checkinput = require("../middleware/checkInput")
+const notFoundIdx = require("../middleware/notFoundIdx")
+const conflictCategoryName = require("../middleware/conflictCategoryName")
+const checkGrade = require("../middleware/checkGrade")
+const checkLogin = require("../middleware/checkLogIn")
+const createCategory = require("../successMiddleware/createCategory")
+
+const successResponse = require("../Module/responseWrapper")
 
 //카테고리 추가
-router.post("/", (req,res) => {
-    const {userGrade,userIdx} = req.session
-    const {categoryName} = req.body
+router.post("/",
+    checkinput(regCategoryName,"categoryName"),
+    checkLogin,
+    notFoundIdx,
+    checkGrade,
+    conflictCategoryName,
+    createCategory,
+    successResponse("카테고리 추가 성공")
+)
 
-    try {
-        inputErrorFunc(categoryName, "카테고리 이름", regCategoryName)
-
-        // notUserIdxErrorFunc(userIdx)
-
-        const rows = []
-
-        // cantAcessErrorFunc(rows, "카테고리 생성 권한이 없습니다.")
-        conflictErrorFunc(rows, "카테고리 명")
-
-        successFunc(res, "카테고리 추가 성공")
-        
-    } catch (e) {
-        errorState(res, e)
-    }
-
-})
 //카테고리 수정
 router.put("/:categoryIdx", (req,res) => {
     const {userGrade,userIdx} = req.session

@@ -96,4 +96,7 @@ function errorState(res, e) {
 }) 
 }
 
+
+
+
 module.exports = {notUserIdxErrorFunc, inputErrorFunc, cantAcessErrorFunc, notFoundErrorFunc, conflictErrorFunc, errorState, successFunc}

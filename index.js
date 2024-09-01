@@ -3,9 +3,6 @@ const express = require("express")
 const session = require("express-session")
 const app = express()
 
-// const mariadb = require("./src/database/database")
-// mariadb.connect();
-
 app.use(express.json()) // Object를 파싱해주는 명령어
 
 app.use(
@@ -18,6 +15,14 @@ app.use(
         // secure: true, // 보안연결에서만 전송되어야함을 나타내는것 https
     }
 }))
+
+app.use((req,res,next) => {
+    if(!req.session.userIdx){
+        req.session.userIdx = "2"
+        req.session.userGrade = "1"
+    }
+    next();
+})
 
 const pageRouter = require("./src/Router/page")
 app.use("/page", pageRouter)
@@ -33,6 +38,19 @@ app.use("/comment", commentRouter)
 
 const categoryRouter = require("./src/Router/category")
 app.use("/category", categoryRouter)
+
+
+app.use((req,res,next) => {
+    res.status(404).send({
+        "message" : "페이지를 불러올 수 없습니다."
+    })
+})
+
+app.use((err,req,res,next) => {
+    res.status(err.status || 500).send({
+        "message" : err.message
+    })
+})
 
 
 app.listen(8000, () => {

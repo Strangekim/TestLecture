@@ -1,27 +1,20 @@
 const router = require("express").Router()
 const {regId, regPw, regName, regPhone, regUserGrade, regArticleCategory, regIdx, regArticleTitle, regArticleContent, regCommentContent} = require("../Constant/regx")
 const {notUserIdxErrorFunc, inputErrorFunc, cantAcessErrorFunc, notFoundErrorFunc, conflictErrorFunc, errorState, successFunc} = require("../Constant/error")
+const checkinput = require("../middleware/checkInput")
+const checkLogin = require("../middleware/checkLogIn")
+const createComment = require("../successMiddleware/createComment")
+
+const successResponse = require("../Module/responseWrapper")
 
 //댓글 달기
-router.post("/", (req,res) => {
-    const {articleIdx,commentContent} = req.body
-    const {userIdx} = req.session
-
-    try {
-        inputErrorFunc(articleIdx, "게시글", regArticleCategory)
-        inputErrorFunc(commentContent, "댓글 내용", regCommentContent)
-        // notUserIdxErrorFunc(userIdx)
-
-        const rows = []
-
-        notFoundErrorFunc(rows, "게시글")
-
-        successFunc(res, "댓글 작성 성공")
-        
-    } catch (e) {
-        errorState(res, e)
-    }
-})
+router.post("/",
+    checkinput(regArticleCategory, "articleIdx"),
+    checkinput(regCommentContent, "commentContent"),
+    checkLogin,
+    createComment,
+    successResponse("댓글 달기 성공")
+)
 
 //댓글 좋아요
 router.post("/:commentIdx/comment-like", (req,res) => {

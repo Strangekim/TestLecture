@@ -1,10 +1,10 @@
 const customError = require("../Module/customError")
 
 const checkLogin = (req, res, next) => {
-    const {usridx} = req.session
+    const {userIdx} = req.session
 
     try {
-        if (!usridx) throw customError(401, "로그인 후 이용 부탁")
+        if (!userIdx) throw customError(401, "로그인 후 이용해주십시오.")
         
         next()
     } catch (e){

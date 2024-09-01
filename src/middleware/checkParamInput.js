@@ -1,8 +1,8 @@
 const customError = require("../Module/customError")
 
-const checkinput = (reg, check) => {
+const checkParamInput = (reg, check) => {
     return (req, res, next) => {
-        const value = req.body[check]
+        const value = req.params[check]
 
         try {
             if(!reg.test(value) || !value){
@@ -10,7 +10,7 @@ const checkinput = (reg, check) => {
             }
             next()
         } catch (e){
-            res.status(e.status).send({
+            res.status(e.status || 500).send({
                 "message" : e.message,
                 "status" : e.status
             })
@@ -19,4 +19,4 @@ const checkinput = (reg, check) => {
     }
 }
 
-module.exports = checkinput
+module.exports = checkParamInput
