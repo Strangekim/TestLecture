@@ -2,9 +2,9 @@ const conn = require("../database/database")
 
 const notFoundPhone = (req,res,next) => {
     const {userPhone} = req.body
-    const sql = `SELECT userId FROM user WHERE userPhone = "${userPhone}"`
+    const sql = `SELECT userId FROM user WHERE userPhone = ?`
 
-    conn.query(sql, function (err,rows){
+    conn.query(sql, [userPhone],function (err,rows){
         if(err){
             return res.status(500).send({
                 "message" : "서버 연결에 실패하였습니다."

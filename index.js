@@ -40,15 +40,15 @@ const categoryRouter = require("./src/Router/category")
 app.use("/category", categoryRouter)
 
 
-app.use((req,res,next) => {
-    res.status(404).send({
-        "message" : "페이지를 불러올 수 없습니다."
-    })
-})
-
 app.use((err,req,res,next) => {
     res.status(err.status || 500).send({
         "message" : err.message
+    })
+})
+
+app.use((req,res,next) => {
+    res.status(404).send({
+        "message" : "페이지를 불러올 수 없습니다."
     })
 })
 

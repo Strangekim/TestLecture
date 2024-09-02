@@ -3,7 +3,7 @@ const {regId, regPw, regName, regPhone, regUserGrade, regArticleCategory, regIdx
 const {notUserIdxErrorFunc, inputErrorFunc, cantAcessErrorFunc, notFoundErrorFunc, conflictErrorFunc, errorState, successFunc} = require("../Constant/error")
 
 const checkinput = require("../middleware/checkInput")
-const connetLogin = require("../middleware/connectLogin")
+const connectLogin = require("../middleware/connectLogin")
 const notFoundIdx = require("../middleware/notFoundIdx")
 const checkLogin = require("../middleware/checkLogIn")
 const notFoundPhone = require("../middleware/notFoundPhone")
@@ -17,6 +17,9 @@ const checkQueryInput = require("../middleware/checkQueryInput")
 const getArticle = require("../successMiddleware/getArticle")
 const checkParamInput = require("../middleware/checkParamInput")
 const createArticleLike = require("../successMiddleware/createArticleLike")
+const checkArticle = require("../middleware/checkArticle")
+const deleteArticle = require("../successMiddleware/deleteArticle")
+const updateArticle = require("../successMiddleware//updateArticle")
 
 
 const successResponse = require("../Module/responseWrapper")
@@ -42,55 +45,24 @@ router.post("/",
 )
 
 //게시글 수정
-router.put("/:articleIdx", (req,res) => {
-    const {articleIdx} = req.params
-    const {articleCategory, articleTitle, articleContent} = req.body
-    const {userIdx} = req.session
-
-    try {
-        inputErrorFunc(articleIdx, "게시글", regIdx)
-        inputErrorFunc(articleCategory, "게시판 종류", regArticleCategory)
-        inputErrorFunc(articleTitle, "게시글 제목", regArticleTitle)
-        inputErrorFunc(articleContent, "게시글 내용", regArticleContent)
-        // notUserIdxErrorFunc(userIdx)
-
-        const rows = []
-
-        cantAcessErrorFunc(rows, "본인의 게시글이 아닙니다.")
-
-        // notFoundErrorFunc(rows, "카테고리")
-        // notFoundErrorFunc(rows, "게시글")
-
-        successFunc(res, "게시글 수정 성공")
-        
-    } catch (e) {
-        errorState(res, e)
-    }
-
-})
+router.put("/:articleIdx",
+    checkParamInput(regIdx, "articleIdx"),
+    checkinput(regArticleTitle,"articleTitle"),
+    checkinput(regArticleContent,"articleContent"),
+    checkLogin,
+    checkArticle,
+    updateArticle,
+    successResponse("게시글 수정 성공")
+)
 
 // 게시글 삭제
-router.delete("/:articleIdx", (req,res) => {
-    const {articleIdx} = req.params
-    const {userIdx} = req.session
-
-    try {
-        inputErrorFunc(articleIdx, "게시글", regIdx)
-        // notUserIdxErrorFunc(userIdx)
-
-        const rows = []
-
-        cantAcessErrorFunc(rows, "본인의 게시글이 아닙니다.")
-
-        // notFoundErrorFunc(rows, "카테고리")
-        // notFoundErrorFunc(rows, "게시글")
-
-        successFunc(res, "게시글 삭제 성공")
-        
-    } catch (e) {
-        errorState(res, e)
-    }
-})
+router.delete("/:articleIdx", 
+    checkParamInput(regIdx, "articleIdx"),
+    checkLogin,
+    checkArticle,
+    deleteArticle,
+    successResponse("게시글 삭제 성공")
+)
 
 
 // 게시글 검색
@@ -125,8 +97,8 @@ router.get("/search-article", (req,res) => {
 
 // 게시글 좋아요
 router.post("/:articleIdx/article-like",
-
     checkParamInput(regIdx, "articleIdx"),
+    checkLogin,
     notFoundIdx,
     createArticleLike,
     successResponse("게시글 좋아요 성공")
@@ -137,6 +109,9 @@ router.delete("/:articleIdx/article-like", (req,res) => {
     const {articleIdx} = req.params
     const {userIdx} = req.session
 
+    checkParamInput(regIdx, "articleIdx"),
+    checkLogin,
+    notFoundIdx
 
     try {
         inputErrorFunc(articleIdx, "게시글", regIdx)
@@ -153,10 +128,6 @@ router.delete("/:articleIdx/article-like", (req,res) => {
         errorState(res, e)
     }    
 })
-
-
-
-
 
 
 
