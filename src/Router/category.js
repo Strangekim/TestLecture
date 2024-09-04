@@ -3,7 +3,7 @@ const {regId, regPw, regName, regPhone, regUserGrade, regArticleCategory, regIdx
 const {notUserIdxErrorFunc, inputErrorFunc, cantAcessErrorFunc, notFoundErrorFunc, conflictErrorFunc, errorState, successFunc} = require("../Constant/error")
 
 const checkinput = require("../middleware/checkInput")
-const notFoundIdx = require("../middleware/notFoundIdx")
+const notFoundIdx = require("../successMiddleware/notFoundIdx")
 const conflictCategoryName = require("../middleware/conflictCategoryName")
 const checkGrade = require("../middleware/checkGrade")
 const checkLogin = require("../middleware/checkLogIn")

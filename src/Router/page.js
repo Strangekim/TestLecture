@@ -1,6 +1,6 @@
 const router = require("express").Router()
 const path = require('path')
-const conn = require("../database/database")
+const conn = require("../database/postgreSQL")
 
 router.get("/home", (req, res) => {
     res.sendFile(path.join(__dirname, "../page/home.html"));

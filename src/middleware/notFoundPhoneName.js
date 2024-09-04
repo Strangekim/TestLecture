@@ -1,4 +1,4 @@
-const conn = require("../database/database")
+const conn = require("../database/postgreSQL")
 
 const notFoundPhoneName = (req,res,next) => {
     const {userPhone, userName} = req.body

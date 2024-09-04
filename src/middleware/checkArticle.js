@@ -1,4 +1,4 @@
-const conn = require("../database/database")
+const conn = require("../database/postgreSQL")
 
 const checkArticle = (req,res,next) => {
     const {articleIdx} = req.params;

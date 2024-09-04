@@ -1,4 +1,4 @@
-const conn = require("../database/database")
+const conn = require("../database/postgreSQL")
 
 const checkGrade = (req,res,next) => {
     const {userGrade} = req.session

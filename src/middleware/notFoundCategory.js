@@ -1,4 +1,4 @@
-const conn = require("../database/database")
+const conn = require("../database/postgreSQL")
 
 const notFoundCategory = (req,res,next) => {
     const {categoryIdx} = req.query

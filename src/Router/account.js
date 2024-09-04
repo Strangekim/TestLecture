@@ -1,15 +1,16 @@
 const router = require("express").Router()
 const {regId, regPw, regName, regPhone, regUserGrade, regIdx} = require("../Constant/regx")
 const checkinput = require("../middleware/checkInput")
-const connectLogin = require("../middleware/connectLogin")
-const notFoundIdx = require("../middleware/notFoundIdx")
+const Login = require("../accessDB/Login")
 const checkLogin = require("../middleware/checkLogIn")
-const notFoundPhone = require("../middleware/notFoundPhone")
-const notFoundPhoneName = require("../middleware/notFoundPhoneName")
-const conflictError = require("../middleware/conflictError")
-const accountPutInputCheck = require("../middleware/accountPutInputCheck")
+const notFoundInformation = require("../accessDB/notFoundInformation")
+const conflictError = require("../accessDB/conflictError")
 const logOut = require("../middleware/logOut")
-const createUser = require("../successMiddleware/createUser")
+const createUser = require("../accessDB/createUser")
+const deleteUser = require("../accessDB/deleteUser")
+const findId = require("../accessDB/findId")
+const findPw = require("../accessDB/findPw")
+const updateUser = require("../accessDB/updateUser")
 
 const successResponse = require("../Module/responseWrapper")
 
@@ -18,14 +19,14 @@ const successResponse = require("../Module/responseWrapper")
 router.get("/log-in",
     checkinput(regId,"userId"), 
     checkinput(regPw, "userPw"), 
-    connectLogin,
+    Login,
     successResponse("로그인 성공")
 )
 
 // 로그아웃
 router.get("/log-out", 
     checkLogin,
-    notFoundIdx,
+    notFoundInformation('useridx'),
     logOut,
     successResponse("로그아웃 성공")
 )
@@ -33,21 +34,25 @@ router.get("/log-out",
 // 회원 탈퇴
 router.delete("/", 
     checkLogin,
-    notFoundIdx,
+    notFoundInformation('useridx'),
+    deleteUser,
     successResponse("회원 탈퇴 성공")
 )  
 
 // ID 찾기
 router.get("/find-id",
     checkinput(regPhone, "userPhone"),
-    notFoundPhone
+    notFoundInformation('userPhone'),
+    findId
 )
 
 // PW 찾기
 router.get("/find-pw",
     checkinput(regPhone, "userPhone"),
     checkinput(regName, "userName"),
-    notFoundPhoneName
+    notFoundInformation('userPhone'),
+    notFoundInformation('userName'),
+    findPw
 )
 
 // 계정 생성
@@ -65,9 +70,10 @@ router.post("/",
 
 // 계정 수정
 router.put("/",
-    accountPutInputCheck,
+    checkinput(regPw, "userPw"),
+    checkinput(regUserGrade, "userGrade"),
     checkLogin,
-    // 실제 계정 수정 미들웨어
+    updateUser,
     successResponse("회원정보 수정 성공")
 )
 
