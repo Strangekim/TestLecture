@@ -1,22 +1,29 @@
 const router = require("express").Router()
-const {regId, regPw, regName, regPhone, regUserGrade, regArticleCategory, regIdx, regArticleTitle, regArticleContent, regCommentContent, regCategoryName} = require("../Constant/regx")
-const {notUserIdxErrorFunc, inputErrorFunc, cantAcessErrorFunc, notFoundErrorFunc, conflictErrorFunc, errorState, successFunc} = require("../Constant/error")
-
+const {regId, regPw, regName, regPhone, regUserGrade, regIdx, regCategoryName} = require("../Constant/regx")
 const checkinput = require("../middleware/checkInput")
-const notFoundIdx = require("../successMiddleware/notFoundIdx")
-const conflictCategoryName = require("../middleware/conflictCategoryName")
-const checkGrade = require("../middleware/checkGrade")
+const Login = require("../accessDB/Login")
 const checkLogin = require("../middleware/checkLogIn")
-const createCategory = require("../successMiddleware/createCategory")
+const notFoundInformation = require("../accessDB/notFoundInformation")
+const conflictError = require("../accessDB/conflictError")
+const logOut = require("../middleware/logOut")
+const createUser = require("../accessDB/createUser")
+const deleteUser = require("../accessDB/deleteUser")
+const findId = require("../accessDB/findId")
+const findPw = require("../accessDB/findPw")
+const updateUser = require("../accessDB/updateUser")
+const conflictCategoryName = require("../accessDB/conflictCategoryName")
+const createCategory = require("../accessDB/createCategory")
+
+const checkGrade = require("../middleware/checkGrade")
 
 const successResponse = require("../Module/responseWrapper")
 
 //카테고리 추가
 router.post("/",
-    checkinput(regCategoryName,"categoryName"),
+    checkinput(regCategoryName,"categoryname"),
     checkLogin,
-    notFoundIdx,
     checkGrade,
+    notFoundInformation('useridx'),
     conflictCategoryName,
     createCategory,
     successResponse("카테고리 추가 성공")

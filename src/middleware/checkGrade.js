@@ -1,14 +1,13 @@
-const conn = require("../database/postgreSQL")
+const customError = require("../Module/customError")
 
 const checkGrade = (req,res,next) => {
-    const {userGrade} = req.session
-
-    if(!userGrade){
-        return res.status(403).send({
-            "message" : "카테고리 생성 권한이 없습니다."
-        })
+    const {usergrade} = req.session
+    try{
+    if(!usergrade || usergrade != 1) throw customError(403, "카테고리 생성 권한이 없습니다.")
+        next()
+    } catch(e){
+        next(e)
     }
-    next()
 }
 
 

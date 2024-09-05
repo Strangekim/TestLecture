@@ -77,7 +77,4 @@ router.put("/",
     successResponse("회원정보 수정 성공")
 )
 
-
-
-
 module.exports = router

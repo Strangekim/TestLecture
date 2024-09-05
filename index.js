@@ -17,9 +17,9 @@ app.use(
 }))
 
 app.use((req,res,next) => {
-    if(!req.session.userIdx){
-        req.session.userIdx = "11"
-        req.session.userGrade = "1"
+    if(!req.session.useridx){
+        req.session.useridx = "10"
+        req.session.usergrade = "1"
     }
     next();
 })

@@ -1,18 +1,17 @@
-const conn = require("../database/postgreSQL")
+const client = require("../database/postgreSQL")
+const customError = require("../Module/customError")
 
-const createCategory = (req,res,next) => {
-    const {categoryName} = req.body
+const createCategory = async (req,res,next) => {
+    const {categoryname} = req.body
+    const sql = 'INSERT INTO Article.category (categoryname) VALUES ($1)'
 
-    const sql = `INSERT INTO category (categoryName) VALUES (?)`;
-
-    conn.query(sql,[categoryName] ,function (err,result){
-        if(err){
-            return res.status(500).send({
-                "message" : "DB 서버 연결에 실패하였습니다."
-            })
-        }
+    try{
+        const result = await client.query(sql, [categoryname])
         next()
-    })
+    } catch(e){
+        next(e)
+    }
 }
+
 
 module.exports = createCategory
