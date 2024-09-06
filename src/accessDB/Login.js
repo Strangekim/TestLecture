@@ -3,13 +3,13 @@ const customError = require("../Module/customError")
 
 
 const Login = async (req,res,next) => {
-    const {userId, userPw} = req.body;
+    const {userid, userpw} = req.body;
     const sql = `SELECT * FROM Account.user WHERE userid = $1 AND userpw = $2`
 
     try{
-    const result = await client.query(sql, [userId,userPw])
+    const result = await client.query(sql, [userid,userpw])
 
-    if(!result[0]) throw customError(403, "아이디와 비밀번호가 일치하지 않습니다.")
+    if(!result.rows[0]) throw customError(403, "아이디와 비밀번호가 일치하지 않습니다.")
 
     next()
     } catch (e) {

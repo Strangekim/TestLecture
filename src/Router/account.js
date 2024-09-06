@@ -6,19 +6,18 @@ const checkLogin = require("../middleware/checkLogIn")
 const notFoundInformation = require("../accessDB/notFoundInformation")
 const conflictError = require("../accessDB/conflictError")
 const logOut = require("../middleware/logOut")
-const createUser = require("../accessDB/createUser")
-const deleteUser = require("../accessDB/deleteUser")
-const findId = require("../accessDB/findId")
-const findPw = require("../accessDB/findPw")
-const updateUser = require("../accessDB/updateUser")
+const {createUser} = require("../accessDB/result/create")
+const {deleteUser} = require("../accessDB/result/delete")
+const {findId,findPw} = require("../accessDB/result/get")
+const {updateUser} = require("../accessDB/result/put")
 
 const successResponse = require("../Module/responseWrapper")
 
 
 // 로그인
 router.get("/log-in",
-    checkinput(regId,"userId"), 
-    checkinput(regPw, "userPw"), 
+    checkinput(regId,"userid"), 
+    checkinput(regPw, "userpw"), 
     Login,
     successResponse("로그인 성공")
 )
@@ -26,7 +25,7 @@ router.get("/log-in",
 // 로그아웃
 router.get("/log-out", 
     checkLogin,
-    notFoundInformation('useridx'),
+    notFoundInformation('Account.user','useridx'),
     logOut,
     successResponse("로그아웃 성공")
 )
@@ -34,7 +33,7 @@ router.get("/log-out",
 // 회원 탈퇴
 router.delete("/", 
     checkLogin,
-    notFoundInformation('useridx'),
+    notFoundInformation('Account.user','useridx'),
     deleteUser,
     successResponse("회원 탈퇴 성공")
 )  
@@ -42,7 +41,7 @@ router.delete("/",
 // ID 찾기
 router.get("/find-id",
     checkinput(regPhone, "userPhone"),
-    notFoundInformation('userPhone'),
+    notFoundInformation('Account.user','userPhone'),
     findId
 )
 
@@ -50,8 +49,8 @@ router.get("/find-id",
 router.get("/find-pw",
     checkinput(regPhone, "userPhone"),
     checkinput(regName, "userName"),
-    notFoundInformation('userPhone'),
-    notFoundInformation('userName'),
+    notFoundInformation('Account.user','userPhone'),
+    notFoundInformation('Account.user','userName'),
     findPw
 )
 
@@ -62,8 +61,8 @@ router.post("/",
     checkinput(regPw, "userPw"),
     checkinput(regPhone, "userPhone"),
     checkinput(regUserGrade, "userGrade"),
-    conflictError("userId"),
-    conflictError("userPhone"),
+    conflictError('Account.user',"userId"),
+    conflictError('Account.user',"userPhone"),
     createUser,
     successResponse("회원가입 성공")
 )

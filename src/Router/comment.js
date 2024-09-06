@@ -3,14 +3,14 @@ const {regId, regPw, regName, regPhone, regUserGrade, regArticleCategory, regIdx
 const {notUserIdxErrorFunc, inputErrorFunc, cantAcessErrorFunc, notFoundErrorFunc, conflictErrorFunc, errorState, successFunc} = require("../Constant/error")
 const checkinput = require("../middleware/checkInput")
 const checkLogin = require("../middleware/checkLogIn")
-const createComment = require("../successMiddleware/createComment")
+const {createComment} = require("../accessDB/result/create")
 
 const successResponse = require("../Module/responseWrapper")
 
 //댓글 달기
 router.post("/",
-    checkinput(regArticleCategory, "articleIdx"),
-    checkinput(regCommentContent, "commentContent"),
+    checkinput(regArticleCategory, "articleidx"),
+    checkinput(regCommentContent, "commentcontent"),
     checkLogin,
     createComment,
     successResponse("댓글 달기 성공")

@@ -1,0 +1,15 @@
+                                                                           Table "comment.comment"
+      Column      |         Type          | Collation | Nullable |                       Default                       | Storage  | Compression | Stats target | Description 
+------------------+-----------------------+-----------+----------+-----------------------------------------------------+----------+-------------+--------------+-------------
+ commentidx       | integer               |           | not null | nextval('comment.comment_commentidx_seq'::regclass) | plain    |             |              | 
+ commentcontent   | character varying(20) |           | not null |                                                     | extended |             |              | 
+ articleidx       | integer               |           | not null |                                                     | plain    |             |              | 
+ commentlikecount | integer               |           |          | 0                                                   | plain    |             |              | 
+Indexes:
+    "comment_pkey" PRIMARY KEY, btree (commentidx)
+Foreign-key constraints:
+    "comment_articleidx_fkey" FOREIGN KEY (articleidx) REFERENCES article.article(articleidx) ON UPDATE CASCADE ON DELETE CASCADE
+Referenced by:
+    TABLE "comment.commentlike" CONSTRAINT "commentlike_commentidx_fkey" FOREIGN KEY (commentidx) REFERENCES comment.comment(commentidx) ON UPDATE CASCADE ON DELETE CASCADE
+Access method: heap
+

@@ -1,10 +1,10 @@
 const client = require("../database/postgreSQL")
 const customError = require("../Module/customError")
 
-const conflictError = (check) => {
+const conflictError = (q,check) => {
     return async (req,res,next) => {
         const value = req.body[check]
-        const sql = `SELECT * FROM Account.user WHERE ${check} = $1`
+        const sql = `SELECT * FROM ${q} WHERE ${check} = $1`
 
         try{
             const result = await client.query(sql, [value])

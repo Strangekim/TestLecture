@@ -1,19 +1,18 @@
-const conn = require("../database/postgreSQL")
+const client = require("../database/postgreSQL")
+const customError = require("../Module/customError")
 
-const deleteArticle = (req,res,next) => {
-    const {articleIdx} = req.params;
-    const {userIdx} = req.session
+const deleteArticle = async (req,res,next) => {
+    const {articleidx} = req.params
+    const {useridx} = req.session
 
-    const sql = `DELETE FROM article WHERE userIdx = ? AND articleIdx = ?`;
+    const sql = `DELETE FROM Article.article WHERE useridx = $1 AND articleidx = $2`;
 
-    conn.query(sql,[userIdx, articleIdx] ,function (err,row){
-        if(err){
-            return res.status(500).send({
-                "message" : "DB 서버 에러"
-            })
-        }
+    try{
+        const result = await client.query(sql, [useridx,articleidx])
         next()
-    })
+    } catch(e) {
+        next(e)
+    }
 }
 
 module.exports = deleteArticle
