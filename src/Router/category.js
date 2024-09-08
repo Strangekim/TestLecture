@@ -5,11 +5,11 @@ const checkinput = require("../middleware/checkInput")
 const checkLogin = require("../middleware/checkLogIn")
 const checkGrade = require("../middleware/checkGrade")
 
-const notFoundInformation = require("../accessDB/notFoundInformation")
-const conflictError = require("../accessDB/conflictError")
-const {createCategory} = require("../accessDB/result/create")
-const {updateCategory} = require("../accessDB/result/put")
-const {deleteCategory} = require("../accessDB/result/delete")
+const {notFoundInformation} = require("../middleware/accessDB/check/notFoundInformation")
+const {checkDuplication} = require("../middleware/accessDB/check/checkConflict")
+const {createCategory} = require("../middleware/accessDB/result/create")
+const {updateCategory} = require("../middleware/accessDB/result/put")
+const {deleteCategory} = require("../middleware/accessDB/result/delete")
 
 const successResponse = require("../Module/responseWrapper")
 
@@ -19,7 +19,7 @@ router.post("/",
     checkLogin,
     checkGrade,
     notFoundInformation('Account.user','useridx'),
-    conflictError('Article.category',"categoryname"),
+    checkDuplication('Article.category',"categoryname"),
     createCategory,
     successResponse("카테고리 추가 성공")
 )
@@ -31,7 +31,7 @@ router.put("/:categoryidx",
     checkLogin,
     checkGrade,
     notFoundInformation('Account.user','useridx'),
-    conflictError('Article.category',"categoryname"),
+    checkDuplication('Article.category',"categoryname"),
     updateCategory,
     successResponse("카테고리 수정 성공")
 )

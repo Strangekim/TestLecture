@@ -1,5 +1,5 @@
-const client = require("../database/postgreSQL")
-const customError = require("../Module/customError")
+const client = require("../../database/postgreSQL")
+const customError = require("../../Module/customError")
 
 const checkArticleLike =  async (req,res,next) => {
         const {articleidx} = req.params

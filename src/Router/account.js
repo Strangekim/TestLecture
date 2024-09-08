@@ -1,15 +1,17 @@
 const router = require("express").Router()
 const {regId, regPw, regName, regPhone, regUserGrade, regIdx} = require("../Constant/regx")
+
 const checkinput = require("../middleware/checkInput")
-const Login = require("../accessDB/Login")
 const checkLogin = require("../middleware/checkLogIn")
-const notFoundInformation = require("../accessDB/notFoundInformation")
-const conflictError = require("../accessDB/conflictError")
 const logOut = require("../middleware/logOut")
-const {createUser} = require("../accessDB/result/create")
-const {deleteUser} = require("../accessDB/result/delete")
-const {findId,findPw} = require("../accessDB/result/get")
-const {updateUser} = require("../accessDB/result/put")
+
+const {Login} = require("../middleware/accessDB/result/get")
+const {notFoundInformation} = require("../middleware/accessDB/check/notFoundInformation")
+const {checkDuplication} = require("../middleware/accessDB/check/checkConflict")
+const {createUser} = require("../middleware/accessDB/result/create")
+const {deleteUser} = require("../middleware/accessDB/result/delete")
+const {findId,findPw} = require("../middleware/accessDB/result/get")
+const {updateUser} = require("../middleware/accessDB/result/put")
 
 const successResponse = require("../Module/responseWrapper")
 
@@ -61,8 +63,8 @@ router.post("/",
     checkinput(regPw, "userPw"),
     checkinput(regPhone, "userPhone"),
     checkinput(regUserGrade, "userGrade"),
-    conflictError('Account.user',"userId"),
-    conflictError('Account.user',"userPhone"),
+    checkDuplication('Account.user',"userId"),
+    checkDuplication('Account.user',"userPhone"),
     createUser,
     successResponse("회원가입 성공")
 )

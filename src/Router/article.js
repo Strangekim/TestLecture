@@ -1,23 +1,18 @@
 const router = require("express").Router()
-const {regId, regPw, regName, regPhone, regUserGrade, regArticleCategory, regIdx, regArticleTitle, regArticleContent} = require("../Constant/regx")
-const {notUserIdxErrorFunc, inputErrorFunc, cantAcessErrorFunc, notFoundErrorFunc, conflictErrorFunc, errorState, successFunc} = require("../Constant/error")
+const {regId, regPw, regName, regPhone, regUserGrade, regArticleCategory, regIdx, regArticleTitle, regArticleContent,regCommentContent} = require("../Constant/regx")
 
 const checkinput = require("../middleware/checkInput")
 const checkLogin = require("../middleware/checkLogIn")
 
-const notFoundInformation = require("../accessDB/notFoundInformation")
-const checkArticleConflict = require("../accessDB/checkArticleConflict")
+const {notFoundInformation} = require("../middleware/accessDB/check/notFoundInformation")
+const {checkConflict} = require("../middleware/accessDB/check/checkConflict")
+const {checkArticleLike,checkArticleNotLike} = require("../middleware/accessDB/check/checkLike")
+const {getArticle,searchArticle} = require("../middleware/accessDB/result/get")
+const {createArticle,createArticleLike} = require("../middleware/accessDB/result/create")
+const {updateArticle} = require("../middleware/accessDB/result/put")
+const {deleteArticleLike,deleteArticle} = require("../middleware/accessDB/result/delete")
 
-const {checkArticleLike,checkArticleNotLike} = require("../accessDB/checkArticleLike")
-
-const {getArticle} = require("../accessDB/result/get")
-const {createArticle,createArticleLike} = require("../accessDB/result/create")
-const {updateArticle} = require("../accessDB/result/put")
-const {deleteArticleLike,deleteArticle} = require("../accessDB/result/delete")
-
-
-
-const successResponse = require("../Module/responseWrapper")
+const successResponse = require("../Module/successResponse")
 
 
 
@@ -45,7 +40,7 @@ router.put("/:articleidx",
     checkinput(regArticleTitle,"articletitle"),
     checkinput(regArticleContent,"articlecontent"),
     checkLogin,
-    checkArticleConflict,
+    checkConflict("Article.article", 'articleidx'),
     updateArticle,
     successResponse("게시글 수정 성공")
 )
@@ -54,7 +49,7 @@ router.put("/:articleidx",
 router.delete("/:articleidx", 
     checkinput(regIdx, "articleidx"),
     checkLogin,
-    checkArticleConflict,
+    checkConflict("Article.article", 'articleidx'),
     deleteArticle,
     successResponse("게시글 삭제 성공")
 )
@@ -62,7 +57,8 @@ router.delete("/:articleidx",
 
 // 게시글 검색
 router.get("/search-article",
-    
+    checkinput(regCommentContent, "searchContent"),
+    searchArticle
 )
 
 // 게시글 좋아요
@@ -79,6 +75,7 @@ router.post("/:articleidx/article-like",
 router.delete("/:articleidx/article-like",
     checkinput(regIdx, "articleidx"),
     checkLogin,
+    notFoundInformation('Account.user','useridx'),
     notFoundInformation('Article.article','articleidx'),
     checkArticleNotLike,
     deleteArticleLike,

@@ -1,5 +1,5 @@
-const client = require("../database/postgreSQL")
-const customError = require("../Module/customError")
+const client = require("../../../database/postgreSQL")
+const customError = require("../../../Module/customError")
 
 const notFoundInformation = (q,input) => {
     return async (req,res,next) => {
@@ -16,4 +16,4 @@ const notFoundInformation = (q,input) => {
     }
 }
 
-module.exports = notFoundInformation
+module.exports = {notFoundInformation}

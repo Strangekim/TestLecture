@@ -1,5 +1,5 @@
-const client = require("../../database/postgreSQL")
-const customError = require("../../Module/customError")
+const client = require("../../../database/postgreSQL")
+const customError = require("../../../Module/customError")
 
 // 게시글 삭제
 const deleteArticle = async (req,res,next) => {
@@ -58,5 +58,36 @@ const deleteCategory = async (req,res,next) => {
     }
 }
 
+// 댓글 삭제
+const deleteComment = async (req,res,next) => {
+    const {commentidx} = req.params
+    const {useridx} = req.session
 
-module.exports = {deleteArticleLike,deleteArticle,deleteUser,deleteCategory}
+    const sql = `DELETE FROM Comment.comment WHERE useridx = $1 AND commentidx = $2`;
+
+    try{
+        const result = await client.query(sql, [useridx,commentidx])
+        next()
+    } catch(e) {
+        next(e)
+    }
+}
+
+// 댓글 좋아요 삭제
+const deleteCommentLike = async (req,res,next) => {
+    const {commentidx} = req.params
+    const {useridx} = req.session
+    
+    try{
+        await client.query('BEGIN')
+        await client.query('DELETE FROM Comment.commentLike WHERE commentidx = $1 AND useridx = $2',[commentidx,useridx])
+        await client.query('UPDATE Comment.comment SET commentlikecount = commentlikecount - 1 WHERE commentidx = $1', [commentidx])
+        await client.query('COMMIT')
+        next()
+    } catch(e) {
+        next(e)
+    }
+}
+
+
+module.exports = {deleteArticleLike,deleteArticle,deleteUser,deleteCategory,deleteCommentLike,deleteComment}

@@ -1,5 +1,5 @@
-const client = require("../../database/postgreSQL")
-const customError = require("../../Module/customError")
+const client = require("../../../database/postgreSQL")
+const customError = require("../../../Module/customError")
 
 // 회원 정보 수정
 const updateUser = async (req,res,next) => {
@@ -9,7 +9,6 @@ const updateUser = async (req,res,next) => {
 
     try{
         const result = await client.query(sql, [userPw, userGrade, userIdx])
-        console.log(result.rowCount)
         if(result.rowCount === 0) throw customError(404, "계정 정보가 존재하지 않습니다.")
         next()
     } catch(e) {
@@ -40,11 +39,24 @@ const updateCategory = async (req,res,next) => {
 
     try{
         const result = await client.query(sql, [categoryname, categoryidx])
-        console.log(result.rowCount)
         next()
     } catch(e) {
         next(e)
     }
 }
 
-module.exports = {updateUser,updateArticle,updateCategory}
+const updateComment = async (req,res,next) => {
+    const {commentidx} = req.params
+    const {commentcontent} = req.body
+
+    const sql = `UPDATE Comment.comment SET commentcontent = $1 WHERE commentidx = $2`
+    
+    try {
+        await client.query(sql, [commentcontent,commentidx])
+        next()
+    } catch(e) {
+        next(e)
+    }
+}
+
+module.exports = {updateUser,updateArticle,updateCategory,updateComment}

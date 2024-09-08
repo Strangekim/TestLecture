@@ -1,135 +1,79 @@
 const router = require("express").Router()
 const {regId, regPw, regName, regPhone, regUserGrade, regArticleCategory, regIdx, regArticleTitle, regArticleContent, regCommentContent} = require("../Constant/regx")
-const {notUserIdxErrorFunc, inputErrorFunc, cantAcessErrorFunc, notFoundErrorFunc, conflictErrorFunc, errorState, successFunc} = require("../Constant/error")
+
 const checkinput = require("../middleware/checkInput")
 const checkLogin = require("../middleware/checkLogIn")
-const {createComment} = require("../accessDB/result/create")
 
-const successResponse = require("../Module/responseWrapper")
+const {createComment,createCommentLike} = require("../middleware/accessDB/result/create")
+const {notFoundInformation} = require("../middleware/accessDB/check/notFoundInformation")
+const {checkConflict} = require("../middleware/accessDB/check/checkConflict")
+const {updateComment} = require("../middleware/accessDB/result/put")
+const {checkCommentLike,checkNotCommentLike} = require("../middleware/accessDB/check/checkLike")
+const {deleteCommentLike,deleteComment} = require("../middleware/accessDB/result/delete")
+const {searchComment} = require("../middleware/accessDB/result/get")
+
+const successResponse = require("../Module/successResponse")
 
 //댓글 달기
 router.post("/",
-    checkinput(regArticleCategory, "articleidx"),
+    checkinput(regIdx, "articleidx"),
     checkinput(regCommentContent, "commentcontent"),
     checkLogin,
     createComment,
     successResponse("댓글 달기 성공")
 )
 
+//댓글 수정
+router.put("/:commentidx",
+    checkinput(regIdx, "commentidx"),
+    checkinput(regCommentContent, "commentcontent"),
+    checkLogin,
+    notFoundInformation('Account.user','useridx'),
+    notFoundInformation('Comment.comment','commentidx'),
+    checkConflict("Comment.comment","commentidx"),
+    updateComment,
+    successResponse("댓글 수정 성공")
+)
+
 //댓글 좋아요
-router.post("/:commentIdx/comment-like", (req,res) => {
-    const {commentIdx} = req.params
-    const {userIdx} = req.session
-
-    try {
-        inputErrorFunc(commentIdx, "댓글", regIdx)
-        // notUserIdxErrorFunc(userIdx)
-
-        const rows = []
-
-        // notFoundErrorFunc(rows, "댓글")
-        conflictErrorFunc(rows, "좋아요 요청")
-
-        successFunc(res, "댓글 좋아요 성공")
-        
-    } catch (e) {
-        errorState(res, e)
-    }
-
-})
+router.post("/:commentidx/comment-like", 
+    checkinput(regIdx, "commentidx"),
+    checkLogin,
+    notFoundInformation('Account.user','useridx'),
+    notFoundInformation('Comment.comment','commentidx'),
+    checkCommentLike,
+    createCommentLike,
+    successResponse("댓글 좋아요 성공")
+)
 // 댓글 좋아요 삭제
-router.delete("/:commentIdx/comment-like", (req,res) => {
-    const {commentIdx} = req.params
-    const {userIdx} = req.session
+router.delete("/:commentidx/comment-like", 
+    checkinput(regIdx, "commentidx"),
+    checkLogin, 
+    notFoundInformation('Account.user','useridx'),
+    notFoundInformation('Comment.comment','commentidx'),
+    checkNotCommentLike,
+    deleteCommentLike,
+    successResponse("댓글 좋아요 삭제 성공")
+)
 
-    try {
-        inputErrorFunc(commentIdx, "댓글", regIdx)
-        // notUserIdxErrorFunc(userIdx)
 
-        const rows = []
-
-        // notFoundErrorFunc(rows, "댓글")
-        conflictErrorFunc(rows, "좋아요 삭제 요청")
-
-        successFunc(res, "댓글 좋아요 삭제 성공")
-        
-    } catch (e) {
-        errorState(res, e)
-    }
-})
+//댓글 삭제
+router.delete("/:commentidx", 
+    checkinput(regIdx, "commentidx"),
+    checkLogin,
+    notFoundInformation('Account.user','useridx'),
+    notFoundInformation('Comment.comment','commentidx'),
+    checkConflict("Comment.comment","commentidx"),
+    deleteComment,
+    successResponse("댓글 삭제 성공")       
+)
 
 // 댓글 검색
-router.get("/", (req,res) => {
-    const {searchContent,searchUser} = req.body
-    const {userIdx} = req.session
+router.get("/", 
+    checkinput(regCommentContent, "searchContent"),
+    searchComment 
+)
 
-    try{
-        if(!searchContent && !searchUser) {
-            const err = new Error("하나의 값은 입력되어야 합니다.")
-            err.status = 400
-            throw err           
-        }
-        if(searchContent) {
-            inputErrorFunc(searchContent, "댓글 내용", regCommentContent)
-        }
-        if(userIdx) {
-            inputErrorFunc(searchUser, "작성자", regId)
-        }
-        // notUserIdxErrorFunc(userIdx)
 
-        const rows = []
-        successFunc(res, rows)        
-    }catch (e) {
-        errorState(res, e)
-    }
-})
-
-//댓글 수정
-router.put("/:commentIdx", (req,res) => {
-    const {commentIdx} = req.params
-    const {userIdx} = req.session
-    const {commentContent} = req.body
-    
-    try {
-        inputErrorFunc(commentIdx, "댓글", regIdx)
-        inputErrorFunc(commentContent, "댓글 내용", regCommentContent)
-
-        // notUserIdxErrorFunc(userIdx)
-
-        const rows = []
-
-        cantAcessErrorFunc(rows, "본인의 게시글이 아닙니다.")
-
-        // notFoundErrorFunc(rows, "댓글")
-
-        successFunc(res, "댓글 수정 성공")
-        
-    } catch (e) {
-        errorState(res, e)
-    }
-})
-//댓글 삭제
-router.delete("/:commentIdx", (req,res) => {
-    const {commentIdx} = req.params
-    const {userIdx} = req.session
-    
-    try {
-        inputErrorFunc(commentIdx, "댓글", regIdx)
-
-        // notUserIdxErrorFunc(userIdx)
-
-        const rows = []
-
-        // cantAcessErrorFunc(rows, "본인의 게시글이 아닙니다.")
-
-        // notFoundErrorFunc(rows, "댓글")
-
-        successFunc(res, "댓글 삭제 성공")
-        
-    } catch (e) {
-        errorState(res, e)
-    }
-
-})
 
 module.exports = router

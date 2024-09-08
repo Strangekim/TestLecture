@@ -1,5 +1,5 @@
-const client = require("../../database/postgreSQL")
-const customError = require("../../Module/customError")
+const client = require("../../../database/postgreSQL")
+const customError = require("../../../Module/customError")
 
 // 회원가입
 const createUser = async (req,res,next) => {
@@ -73,4 +73,19 @@ const createComment = async (req,res,next) => {
     }
 }
 
-module.exports = {createArticle,createArticleLike,createUser,createCategory,createComment}
+const createCommentLike = async (req,res,next) => {
+    const {commentidx} = req.params
+    const {useridx} = req.session
+
+    try{
+        await client.query('BEGIN')
+        await client.query('INSERT INTO Comment.commentlike (commentidx, useridx) VALUES ($1,$2)',[commentidx,useridx])
+        await client.query('UPDATE Comment.comment SET commentlikecount = commentlikecount + 1 WHERE commentidx = $1', [commentidx])
+        await client.query('COMMIT')
+        next()
+    }catch(e){
+        next(e)
+    }
+}
+
+module.exports = {createArticle,createArticleLike,createUser,createCategory,createComment,createCommentLike}
