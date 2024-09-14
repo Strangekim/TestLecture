@@ -1,9 +1,9 @@
 const customError = require("../Module/customError")
 
 const logOut = (req, res, next) => {
-    const {userIdx} = req.session
+    const {useridx} = req.session
     req.session.destroy()
-    next()
+    return res.status(200).send({})
 }
 
 module.exports = logOut

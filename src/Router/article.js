@@ -4,16 +4,11 @@ const {regId, regPw, regName, regPhone, regUserGrade, regArticleCategory, regIdx
 const checkinput = require("../middleware/checkInput")
 const checkLogin = require("../middleware/checkLogIn")
 
-const {notFoundInformation} = require("../middleware/accessDB/check/notFoundInformation")
-const {checkConflict} = require("../middleware/accessDB/check/checkConflict")
-const {checkArticleLike,checkArticleNotLike} = require("../middleware/accessDB/check/checkLike")
-const {getArticle,searchArticle} = require("../middleware/accessDB/result/get")
-const {createArticle,createArticleLike} = require("../middleware/accessDB/result/create")
-const {updateArticle} = require("../middleware/accessDB/result/put")
-const {deleteArticleLike,deleteArticle} = require("../middleware/accessDB/result/delete")
+const {notFoundInformation} = require("../middleware/notFoundInformation")
+const {checkConflict} = require("../middleware/checkConflict")
+const {checkArticleLike,checkNotArticleLike} = require("../middleware/checkLike")
 
-const successResponse = require("../Module/successResponse")
-
+const {deleteArticleLike,deleteArticle,updateArticle,createArticleLike,createArticle,searchArticle,getArticle} = require("../service/articleService")
 
 
 // 게시글 목록 가져오기
@@ -30,8 +25,7 @@ router.post("/",
     checkinput(regArticleContent,"articlecontent"),
     notFoundInformation('Account.user','useridx'),
     notFoundInformation('Article.category','categoryidx'),
-    createArticle,
-    successResponse("게시글 작성 성공")
+    createArticle
 )
 
 //게시글 수정
@@ -41,8 +35,7 @@ router.put("/:articleidx",
     checkinput(regArticleContent,"articlecontent"),
     checkLogin,
     checkConflict("Article.article", 'articleidx'),
-    updateArticle,
-    successResponse("게시글 수정 성공")
+    updateArticle
 )
 
 // 게시글 삭제
@@ -50,8 +43,7 @@ router.delete("/:articleidx",
     checkinput(regIdx, "articleidx"),
     checkLogin,
     checkConflict("Article.article", 'articleidx'),
-    deleteArticle,
-    successResponse("게시글 삭제 성공")
+    deleteArticle
 )
 
 
@@ -67,8 +59,7 @@ router.post("/:articleidx/article-like",
     checkLogin,
     notFoundInformation('Article.article','articleidx'),
     checkArticleLike,
-    createArticleLike,
-    successResponse("게시글 좋아요 성공")
+    createArticleLike
 )
 
 // 게시글 좋아요 삭제
@@ -77,9 +68,8 @@ router.delete("/:articleidx/article-like",
     checkLogin,
     notFoundInformation('Account.user','useridx'),
     notFoundInformation('Article.article','articleidx'),
-    checkArticleNotLike,
-    deleteArticleLike,
-    successResponse("게시글 좋아요 삭제 성공")
+    checkNotArticleLike,
+    deleteArticleLike
 )
 
 

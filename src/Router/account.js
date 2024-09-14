@@ -1,43 +1,36 @@
 const router = require("express").Router()
 const {regId, regPw, regName, regPhone, regUserGrade, regIdx} = require("../Constant/regx")
 
+const dataLog = require("../database/mongoDB")
+
 const checkinput = require("../middleware/checkInput")
 const checkLogin = require("../middleware/checkLogIn")
 const logOut = require("../middleware/logOut")
 
-const {Login} = require("../middleware/accessDB/result/get")
-const {notFoundInformation} = require("../middleware/accessDB/check/notFoundInformation")
-const {checkDuplication} = require("../middleware/accessDB/check/checkConflict")
-const {createUser} = require("../middleware/accessDB/result/create")
-const {deleteUser} = require("../middleware/accessDB/result/delete")
-const {findId,findPw} = require("../middleware/accessDB/result/get")
-const {updateUser} = require("../middleware/accessDB/result/put")
+const {notFoundInformation} = require("../middleware/notFoundInformation")
+const {checkDuplication} = require("../middleware/checkConflict")
 
-const successResponse = require("../Module/responseWrapper")
-
+const {Login,deleteUser,updateUser,createUser,findPw,findId} = require("../service/accountService")
 
 // 로그인
 router.get("/log-in",
     checkinput(regId,"userid"), 
     checkinput(regPw, "userpw"), 
-    Login,
-    successResponse("로그인 성공")
+    Login
 )
 
 // 로그아웃
 router.get("/log-out", 
     checkLogin,
     notFoundInformation('Account.user','useridx'),
-    logOut,
-    successResponse("로그아웃 성공")
+    logOut
 )
 
 // 회원 탈퇴
 router.delete("/", 
     checkLogin,
     notFoundInformation('Account.user','useridx'),
-    deleteUser,
-    successResponse("회원 탈퇴 성공")
+    deleteUser
 )  
 
 // ID 찾기
@@ -65,8 +58,7 @@ router.post("/",
     checkinput(regUserGrade, "userGrade"),
     checkDuplication('Account.user',"userId"),
     checkDuplication('Account.user',"userPhone"),
-    createUser,
-    successResponse("회원가입 성공")
+    createUser
 )
 
 // 계정 수정
@@ -74,8 +66,7 @@ router.put("/",
     checkinput(regPw, "userPw"),
     checkinput(regUserGrade, "userGrade"),
     checkLogin,
-    updateUser,
-    successResponse("회원정보 수정 성공")
+    updateUser
 )
 
 module.exports = router

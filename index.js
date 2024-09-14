@@ -2,6 +2,11 @@
 const express = require("express")
 const session = require("express-session")
 const app = express()
+const EventEmitter = require('events')
+
+const custum_event = new EventEmitter();
+
+const dataLog = require("./src/database/mongoDB")
 
 app.use(express.json()) // Object를 파싱해주는 명령어
 
@@ -24,6 +29,8 @@ app.use((req,res,next) => {
     next();
 })
 
+app.use(dataLog)
+
 const pageRouter = require("./src/Router/page")
 app.use("/page", pageRouter)
 
@@ -39,10 +46,12 @@ app.use("/comment", commentRouter)
 const categoryRouter = require("./src/Router/category")
 app.use("/category", categoryRouter)
 
-
 app.use((err,req,res,next) => {
+    console.error(err.stack);
+    console.log("500입니다.")
+
     res.status(err.status || 500).send({
-        "message" : err.message
+    "message" : err.message
     })
 })
 
