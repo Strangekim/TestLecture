@@ -1,6 +1,6 @@
 const mongo = require("mongodb").MongoClient
 
-const dataLog = async (req,res,next) => {
+const logDataMongoDb = async (req,res,next) => {
     const {useridx} = req.session
     const now = new Date();
     res.on('finish', async () => {
@@ -16,7 +16,8 @@ const dataLog = async (req,res,next) => {
                 "query" : req.query,
                 "params" : req.params,
                 "header" : req.headers,
-                "status" : res.statusCode
+                "status" : res.statusCode,
+                "result" : res.rows
             });
         } catch (e) {
             console.errorquit(e)
@@ -26,5 +27,5 @@ const dataLog = async (req,res,next) => {
     next()
 }
 
-module.exports = dataLog
+module.exports = logDataMongoDb
 

@@ -9,6 +9,10 @@ const Login = async (req,res,next) => {
     try{
         const result = await client.query(sql, [userid,userpw])
         if(!result.rows[0]) throw customError(403, "아이디와 비밀번호가 일치하지 않습니다.")
+
+        req.session.useridx = result.rows[0].useridx
+        req.session.gradeidx = result.rows[0].gradeidx
+
         res.status(200).send({})
     } catch (e) {
         next(e)

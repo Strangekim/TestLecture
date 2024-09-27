@@ -2,11 +2,8 @@
 const express = require("express")
 const session = require("express-session")
 const app = express()
-const EventEmitter = require('events')
 
-const custum_event = new EventEmitter();
-
-const dataLog = require("./src/database/mongoDB")
+const logDataMongoDb = require("./src/database/mongoDB")
 
 app.use(express.json()) // Object를 파싱해주는 명령어
 
@@ -21,16 +18,12 @@ app.use(
     }
 }))
 
-app.use((req,res,next) => {
-    if(!req.session.useridx){
-        req.session.useridx = "10"
-        req.session.gradeidx = "1"
-    }
-    next();
-})
 
-app.use(dataLog)
+// 몽고 DB 데이터 로깅
 
+app.use(logDataMongoDb)
+
+// ============ 라우터 등록 ============
 const pageRouter = require("./src/Router/page")
 app.use("/page", pageRouter)
 
@@ -43,12 +36,16 @@ app.use("/article", articleRouter)
 const commentRouter = require("./src/Router/comment")
 app.use("/comment", commentRouter)
 
+const findDataRouter = require("./src/Router/findData")
+app.use("/findData", findDataRouter)
+
 const categoryRouter = require("./src/Router/category")
 app.use("/category", categoryRouter)
 
+// =========== 에러 핸들러 ===============
+
 app.use((err,req,res,next) => {
     console.error(err.stack);
-    console.log("500입니다.")
 
     res.status(err.status || 500).send({
     "message" : err.message

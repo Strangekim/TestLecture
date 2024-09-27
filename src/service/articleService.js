@@ -10,6 +10,7 @@ const getArticle = async (req,res,next)  => {
 
     try{
         const result = await client.query(sql,[categoryidx,limit,offset])
+        res.rows = result.rows
         res.status(200).send({
             "message" : result.rows
         })
@@ -17,6 +18,7 @@ const getArticle = async (req,res,next)  => {
         next(e)
     }
 }
+
 // 게시글 검색
 const searchArticle = async (req,res,next) => {
     const {searchContent} = req.body;
