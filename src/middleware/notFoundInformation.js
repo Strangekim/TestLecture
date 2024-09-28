@@ -3,7 +3,7 @@ const customError = require("../Module/customError")
 
 const notFoundInformation = (q,input) => {
     return async (req,res,next) => {
-        const value = req.body[input] || req.params[input] || req.query[input] || req.session[input]
+        const value = req.body[input] || req.params[input] || req.query[input] || req.decoded[input]
         const sql = `SELECT * FROM ${q} WHERE ${input} = $1`
 
         try{

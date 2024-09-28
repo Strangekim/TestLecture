@@ -31,7 +31,7 @@ const searchComment = async (req,res,next) => {
 // 댓글 생성
 const createComment = async (req,res,next) => {
     const {articleidx,commentcontent} = req.body
-    const {useridx} = req.session
+    const {useridx} = req.decoded
     const sql = `INSERT INTO Comment.comment (articleidx, useridx, commentcontent) VALUES ($1,$2,$3)`
 
     try{
@@ -45,7 +45,7 @@ const createComment = async (req,res,next) => {
 // 댓글 좋아요 생성
 const createCommentLike = async (req,res,next) => {
     const {commentidx} = req.params
-    const {useridx} = req.session
+    const {useridx} = req.decoded
 
     try{
         await client.query('BEGIN')
@@ -61,7 +61,7 @@ const createCommentLike = async (req,res,next) => {
 // 댓글 수정
 const updateComment = async (req,res,next) => {
     const {commentidx} = req.params
-    const {commentcontent} = req.body
+    const {commentcontent} = req.decoded
 
     const sql = `UPDATE Comment.comment SET commentcontent = $1 WHERE commentidx = $2`
     
@@ -76,7 +76,7 @@ const updateComment = async (req,res,next) => {
 // 댓글 삭제
 const deleteComment = async (req,res,next) => {
     const {commentidx} = req.params
-    const {useridx} = req.session
+    const {useridx} = req.decoded
 
     const sql = `DELETE FROM Comment.comment WHERE useridx = $1 AND commentidx = $2`;
 
@@ -91,7 +91,7 @@ const deleteComment = async (req,res,next) => {
 // 댓글 좋아요 삭제
 const deleteCommentLike = async (req,res,next) => {
     const {commentidx} = req.params
-    const {useridx} = req.session
+    const {useridx} = req.decoded
     
     try{
         await client.query('BEGIN')

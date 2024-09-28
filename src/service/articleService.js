@@ -50,7 +50,7 @@ const searchArticle = async (req,res,next) => {
 const createArticle =  async (req,res,next) => {
     const {categoryidx} = req.query
     const {articletitle, articlecontent} = req.body;
-    const {useridx} = req.session
+    const {useridx} = req.decoded
 
     const sql = 
     `
@@ -71,7 +71,7 @@ const createArticle =  async (req,res,next) => {
 // 게시글 좋아요
 const createArticleLike = async (req,res,next) => {
     const {articleidx} = req.params
-    const {useridx} = req.session
+    const {useridx} = req.decoded
 
     try{
         await client.query('BEGIN')
@@ -88,7 +88,7 @@ const createArticleLike = async (req,res,next) => {
 // 게시글 수정
 const updateArticle = async (req,res,next) => {
     const {articleidx} = req.params;
-    const {useridx} = req.session;
+    const {useridx} = req.decoded;
     const {categoryidx, articletitle, articlecontent} = req.body;
     const sql = 
     `
@@ -113,7 +113,7 @@ const updateArticle = async (req,res,next) => {
 // 게시글 삭제
 const deleteArticle = async (req,res,next) => {
     const {articleidx} = req.params
-    const {useridx} = req.session
+    const {useridx} = req.decoded
 
     const sql = `DELETE FROM Article.article WHERE useridx = $1 AND articleidx = $2`;
 
@@ -128,7 +128,7 @@ const deleteArticle = async (req,res,next) => {
 // 게시글 좋아요 삭제
 const deleteArticleLike = async (req,res,next) => {
     const {articleidx} = req.params
-    const {useridx} = req.session
+    const {useridx} = req.decoded
     
     try{
         await client.query('BEGIN')

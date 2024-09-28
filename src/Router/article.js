@@ -23,6 +23,7 @@ router.post("/",
     checkinput(regArticleCategory,"categoryidx"),
     checkinput(regArticleTitle,"articletitle"),
     checkinput(regArticleContent,"articlecontent"),
+    checkLogin,
     notFoundInformation('Account.user','useridx'),
     notFoundInformation('Article.category','categoryidx'),
     createArticle

@@ -32,7 +32,7 @@ const searchStatusDataService = async (req,res,next) => {
 }
 
 const searchUserIdxDataService = async (req,res,next) => {
-    const {useridx} = req.body
+    const {useridx} = req.decoded
 
     try{
         const connect = await mongo.connect("mongodb://localhost:27017")

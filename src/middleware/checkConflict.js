@@ -19,7 +19,7 @@ const checkDuplication = (q,check) => {
 const checkConflict = (q, check) => {
     return async (req,res,next) => {
         const value = req.params[check] || req.query[check] || req.body[check]
-        const {useridx} = req.session
+        const {useridx} = req.decoded
 
         const sql = `SELECT * FROM ${q} WHERE ${check} = $1 AND useridx = $2`
 

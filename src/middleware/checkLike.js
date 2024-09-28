@@ -3,7 +3,7 @@ const customError = require("../Module/customError")
 
 const checkArticleLike =  async (req,res,next) => {
         const {articleidx} = req.params
-        const {useridx} = req.session
+        const {useridx} = req.decoded
 
         const sql = `SELECT * FROM Article.articleLike WHERE articleidx = $1 AND useridx = $2`
 
@@ -18,7 +18,7 @@ const checkArticleLike =  async (req,res,next) => {
 
 const checkNotArticleLike =  async (req,res,next) => {
     const {articleidx} = req.params
-    const {useridx} = req.session
+    const {useridx} = req.decoded
 
     const sql = `SELECT * FROM Article.articleLike WHERE articleidx = $1 AND useridx = $2`
 
@@ -34,7 +34,7 @@ const checkNotArticleLike =  async (req,res,next) => {
 
 const checkCommentLike =  async (req,res,next) => {
     const {commentidx} = req.params
-    const {useridx} = req.session
+    const {useridx} = req.decoded
 
     const sql = `SELECT * FROM Comment.commentLike WHERE commentidx = $1 AND useridx = $2`
 
@@ -49,7 +49,7 @@ const checkCommentLike =  async (req,res,next) => {
 
 const checkNotCommentLike =  async (req,res,next) => {
     const {commentidx} = req.params
-    const {useridx} = req.session
+    const {useridx} = req.decoded
 
     const sql = `SELECT * FROM Comment.commentLike WHERE commentidx = $1 AND useridx = $2`
 
